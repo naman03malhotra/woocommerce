@@ -11,6 +11,7 @@ on:
         default: 'now'
 env:
     TIME_OVERRIDE: ${{ inputs.timeOverride || 'now' }}
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 permissions:
   contents: write
@@ -38,11 +39,14 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
 
-      - name: Generate changelog changes
-        id: changelog
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm utils code-freeze changelog -o ${{ github.repository_owner }} -v ${{ steps.get-versions.outputs.monthlyVersionXY }}
+      - name: Make changes and push
+        run: |
+          git checkout -b tempx  # Ensure you are on the correct branch
+          git push origin tempx
+      
+      # - name: Generate changelog changes
+      #   id: changelog
+      #   run: pnpm utils code-freeze changelog -o ${{ github.repository_owner }} -v ${{ steps.get-versions.outputs.monthlyVersionXY }}
 
 
       - name: Build zip
