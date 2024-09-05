@@ -137,7 +137,7 @@ export const updateReleaseBranchChangelogs = async (
 		await git.commit(
 			`Update the readme files for the ${ version } release`
 		);
-		await git.push( 'origin', commitDirectToBase ? releaseBranch : branch );
+		await git.push( 'naman', commitDirectToBase ? releaseBranch : branch );
 		await git.checkout( '.' );
 
 		if ( commitDirectToBase ) {
