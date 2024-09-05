@@ -33,6 +33,11 @@ jobs:
         id: get-versions
         run: pnpm utils code-freeze get-version -o $TIME_OVERRIDE
 
+      - name: Set git user
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
       - name: Generate changelog changes
         id: changelog
         env:
