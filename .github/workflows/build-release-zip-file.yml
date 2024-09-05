@@ -9,6 +9,8 @@ on:
       timeOverride:
         description: "Time Override: The time to use in checking whether the action should run (default: 'now')."
         default: 'now'
+env:
+    TIME_OVERRIDE: ${{ inputs.timeOverride || 'now' }}
 
 permissions: {}
 
