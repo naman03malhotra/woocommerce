@@ -11,17 +11,17 @@ on:
         default: 'now'
 env:
     TIME_OVERRIDE: ${{ inputs.timeOverride || 'now' }}
-    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-permissions:
-  contents: write
+    GIT_COMMITTER_NAME: 'Naman Bot'
+    GIT_COMMITTER_EMAIL: 'naman03malhotra@gmail.com'
+    GIT_AUTHOR_NAME: 'Naman Bot'
+    GIT_AUTHOR_EMAIL: 'naman03malhotra@gmail.com'
 
 jobs:
   build:
     name: Build release zip file
     runs-on: ubuntu-20.04
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v3
 
@@ -34,19 +34,11 @@ jobs:
         id: get-versions
         run: pnpm utils code-freeze get-version -o $TIME_OVERRIDE
 
-      - name: Set git user
-        run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-
-      - name: Make changes and push
-        run: |
-          git checkout -b tempx  # Ensure you are on the correct branch
-          git push origin tempx
-      
-      # - name: Generate changelog changes
-      #   id: changelog
-      #   run: pnpm utils code-freeze changelog -o ${{ github.repository_owner }} -v ${{ steps.get-versions.outputs.monthlyVersionXY }}
+      - name: Generate changelog changes
+        id: changelog
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm utils code-freeze changelog -o ${{ github.repository_owner }} -v ${{ steps.get-versions.outputs.monthlyVersionXY }}
 
 
       - name: Build zip
