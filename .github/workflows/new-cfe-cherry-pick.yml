@@ -1,7 +1,7 @@
 name: New CFE workflow - Cherry pick
 on:
     pull_request:
-        types: [merged]
+        types: [closed]
     workflow_dispatch:
         inputs:
             # release_branch:
