@@ -36,6 +36,7 @@ jobs:
         runs-on: ubuntu-20.04
         outputs:
             run: ${{ steps.check.outputs.run }}
+            base_ref: ${{ steps.fetch_pr_details.outputs.base_ref }}
         steps:
             - name: Fetch Pull Request Details
               if: github.event.pull_request
@@ -65,7 +66,6 @@ jobs:
 
                       if ( !isBot && baseRef.startsWith( 'release/' ) ) {
                         core.setOutput( 'run', 'true' );
-                        console.log("run:", run);
                       } else {
                         core.setOutput( 'run', 'false' );
                       }
@@ -89,10 +89,16 @@ jobs:
                   script: |
                       const event = ${{ toJSON( github.event ) }}
 
-                      const releaseBranch = '${{ steps.verify.outputs.base_ref }}'
+                      const releaseBranch = '${{ needs.verify.outputs.base_ref }}'
                       const version = releaseBranch.replace( 'release/', '' )
+                      const pr = event.pull_request.number
+
+                      // Output the values
+                      console.log( 'releaseBranch:', releaseBranch )
+                      console.log( 'version:', version )
+                      console.log( 'pr:', pr )
     
-                      core.setOutput( 'pr', '${{ github.event.pull_request.number }}' )
+                      core.setOutput( 'pr', pr )
                       core.setOutput( 'version', version )
                       core.setOutput( 'release', releaseBranch )
 
