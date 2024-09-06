@@ -169,6 +169,11 @@ WooCommerce comes with some sample data you can use to see how products look; im
 
 == Changelog ==
 
-= 9.3.1 2024-XX-XX =
+= 9.3.0 2024-09-25 =
+
+**WooCommerce**
+
+* Fix - 9.3.1 release test [#19](https://github.com/woocommerce/woocommerce/pull/19)
+
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce/trunk/changelog.txt).
