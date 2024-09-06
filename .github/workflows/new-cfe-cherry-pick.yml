@@ -159,9 +159,6 @@ jobs:
               run: |
                   git cherry-pick ${{ steps.commit-sha.outputs.sha }} -m1
 
-            - name: Commit changes for cherry pick
-              run: git commit --no-verify -am "Prep for cherry pick ${{ needs.prep.outputs.pr }}"
-
             - name: Push cherry pick branch up
               run: git push origin cherry-pick-${{ needs.prep.outputs.version }}/${{ needs.prep.outputs.pr }}
 
