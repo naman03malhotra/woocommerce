@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'The version to build the changelog for, especially recommended to provide if it is a patch release. If not provided, the version will be determined from the monthly release calendar.'
+        description: 'Manual Override. Make sure the release branch exist at remote. If not provided, the release branch version will be determined from the monthly release calendar.'
         required: false
         default: ''
 
