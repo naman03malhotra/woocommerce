@@ -65,6 +65,7 @@ jobs:
 
                       if ( !isBot && baseRef.startsWith( 'release/' ) ) {
                         core.setOutput( 'run', 'true' );
+                        console.log("run:", run);
                       } else {
                         core.setOutput( 'run', 'false' );
                       }
@@ -74,7 +75,7 @@ jobs:
     prep:
         name: Prep inputs
         runs-on: ubuntu-20.04
-        if: ${{ needs.check.outputs.run == 'true' }}
+        if: needs.verify.outputs.run == 'true'
         needs: verify
         outputs:
             release: ${{ steps.prep-inputs.outputs.release }}
