@@ -60,6 +60,8 @@ jobs:
                       let run = false;
 
                       const isBot = context.payload.pull_request && ( context.payload.pull_request.user.login == 'github-actions[bot]' || context.payload.pull_request.user.type == 'Bot' );
+                      console.log("isBot:", isBot);
+                      console.log("baseRef.startsWith('release/'):", baseRef.startsWith('release/'));
 
                       if ( !isBot && baseRef.startsWith( 'release/' ) ) {
                         core.setOutput( 'run', 'true' );
