@@ -2,8 +2,8 @@ name: Pre build step - Compile changelog file
 on:
   workflow_dispatch:
     inputs:
-      ref:
-        description: 'By default the zip file is generated from the branch the workflow runs from, but you can specify an explicit reference to use instead here (e.g. refs/tags/tag_name or refs/heads/release/x.x). The resulting file will be available as an artifact on the workflow run.'
+      version:
+        description: 'The version to build the changelog for, especially recommended to provide if it is a patch release. If not provided, the version will be determined from the monthly release calendar.'
         required: false
         default: ''
 
@@ -51,4 +51,4 @@ jobs:
         id: changelog
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: pnpm utils code-freeze changelog -o ${{ github.repository_owner }} -v ${{ steps.get-versions.outputs.monthlyVersionXY }}
+        run: pnpm utils code-freeze changelog -o ${{ github.repository_owner }} -v ${{ inputs.version || steps.get-versions.outputs.monthlyVersionXY }}
