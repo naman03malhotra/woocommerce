@@ -7,24 +7,19 @@ permissions: {}
 
 jobs:
   send-slack-notification-when-issue-contains-team-solaris-label:
-    if: "${{ github.event.label.name == 'code freeze exception' }}"
+    if: github.event.label.name == 'code freeze exception'
     runs-on: ubuntu-20.04
     steps:
-      # - name: Wait 2 minutes for other labelling jobs to finish
-      #   run: sleep 2m
-      #   shell: bash
-
-      # Notify Slack Step
+      - name: Debug GitHub Context
+        run: echo "${{ toJson(github) }}"
       - name: Notify Slack
-        uses: archive/github-actions-slack@d9dae40827adf93bddf939db6552d1e392259d7d
+        uses: archive/github-actions-slack@v2.0.0
         id: notify
         with:
             slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
             slack-channel: general
             slack-text: |
-                <${{ github.event.issue.html_url }}|${{ github.event.issue.title }}>
-                *Labels:* ${{ join(github.event.issue.labels.*.name, ', ') }}
-                Please review this issue to check if it has been correctly assigned to Solaris.
+                Test
             slack-optional-unfurl_links: false
             slack-optional-unfurl_media: false
       - name: Close the issue
