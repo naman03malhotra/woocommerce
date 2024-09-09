@@ -1,4 +1,4 @@
-name: New CFE workflow notifications
+name: 
 on:
   issues:
     types: [labeled]
@@ -20,7 +20,39 @@ jobs:
             ${{ toJson(github) }}
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
+      
+
+
+name: New CFE workflow notifications
+on:
+  issues:
+    types: [labeled]
+
+permissions: {}
+
+jobs:
+  send-slack-notification-when-issue-contains-team-solaris-label:
+    if: "${{ github.event.label.name == 'code freeze exception' }}"
+    runs-on: ubuntu-20.04
+    steps:
+      # - name: Wait 2 minutes for other labelling jobs to finish
+      #   run: sleep 2m
+      #   shell: bash
+
+      # Notify Slack Step
+      - name: Notify Slack
+        uses: archive/github-actions-slack@d9dae40827adf93bddf939db6552d1e392259d7d
+        id: notify
+        with:
+            slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
+            slack-channel: general
+            slack-text: |
+                <${{ github.event.issue.html_url }}|${{ github.event.issue.title }}>
+                *Labels:* ${{ join(github.event.issue.labels.*.name, ', ') }}
+                Please review this issue to check if it has been correctly assigned to Solaris.
+            slack-optional-unfurl_links: false
+            slack-optional-unfurl_media: false
       - name: Close the issue
-        run: gh issue close --comment "Closing issue. **Only WooCommerce employees can open CFEs.** _We probably need a more polite message here._" "https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
+        run: gh issue close --comment "Closing issue. https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
