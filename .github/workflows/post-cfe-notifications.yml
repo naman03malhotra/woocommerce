@@ -1,8 +1,8 @@
 name: New CFE workflow notifications
 on:
   issues:
-    types:
-      - labeled
+    types: [labeled]
+
 jobs:
   add-comment:
     if: github.event.label.name == 'code freeze exception'
