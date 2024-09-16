@@ -29,10 +29,10 @@ jobs:
           slack-optional-unfurl_media: false
         continue-on-error: true
       
-      - name: Close the issue
-        run: gh issue close --comment "Closing issue. https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}" "https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Close the issue
+      #   run: gh issue close --comment "Closing issue. https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}" "https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
   cfe-approved:
@@ -48,6 +48,7 @@ jobs:
       - name: Add label 'cherry pick to trunk' to PR
         run: |
           PR_NUMBER=$(echo "${{ env.PR_URL }}" | grep -oP '\d+$')
+          echo "Extracted PR Number: $PR_NUMBER"
           gh pr edit $PR_NUMBER --add-label "cherry pick to trunk"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
