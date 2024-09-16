@@ -29,6 +29,6 @@ jobs:
         continue-on-error: true
       
       - name: Close the issue
-        run: gh issue close --comment "Closing issue. https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
+        run: gh issue close --comment "Closing issue. https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}" "https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
