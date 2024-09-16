@@ -74,7 +74,7 @@ jobs:
           RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
           GH_TOKEN: ${{ github.token }}
       - name: Close CFE Issue
-        run: gh issue close --comment ":white_check_mark: Closing issue as CFE is Approved ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
+        run: gh issue close --comment "`:white_check_mark:` Closing issue as CFE is Approved ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -95,6 +95,6 @@ jobs:
           slack-optional-unfurl_media: false
         continue-on-error: true
       - name: Close CFE Issue
-        run: gh issue close --comment ":x: Closing issue as CFE is rejected - ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
+        run: gh issue close --comment "`:x:` Closing issue as CFE is rejected - ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
