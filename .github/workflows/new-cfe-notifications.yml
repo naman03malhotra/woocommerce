@@ -24,7 +24,7 @@ jobs:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
           slack-channel: "test"
           slack-text: |
-            New CFE request: ${{ github.event.issue.title }}
+            :arrow_right: New CFE request: ${{ github.event.issue.title }}
             ${{ github.event.issue.html_url }}
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
@@ -74,14 +74,9 @@ jobs:
           RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
           GH_TOKEN: ${{ github.token }}
       - name: Close CFE Issue
-        run: gh issue close --comment "`:white_check_mark:` Closing issue as CFE is Approved ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
+        run: gh issue close --comment "Closing issue as CFE is Approved ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  cfe-rejected:
-    if: github.event.label.name == 'CFE Rejected'
-    runs-on: ubuntu-20.04
-    steps:
       - name: Notify Slack
         uses: archive/github-actions-slack@v2.0.0
         id: notify
@@ -89,12 +84,29 @@ jobs:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
           slack-channel: "test"
           slack-text: |
-            CFE request rejected: ${{ github.event.issue.title }}
+            :white_check_mark: CFE request approved: ${{ github.event.issue.title }}
             ${{ github.event.issue.html_url }}
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
         continue-on-error: true
+
+  cfe-rejected:
+    if: github.event.label.name == 'CFE Rejected'
+    runs-on: ubuntu-20.04
+    steps:
       - name: Close CFE Issue
-        run: gh issue close --comment "`:x:` Closing issue as CFE is rejected - ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
+        run: gh issue close --comment "Closing issue as CFE is rejected - ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Notify Slack
+        uses: archive/github-actions-slack@v2.0.0
+        id: notify
+        with:
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
+          slack-channel: "test"
+          slack-text: |
+            :x: CFE request rejected: ${{ github.event.issue.title }}
+            ${{ github.event.issue.html_url }}
+          slack-optional-unfurl_links: false
+          slack-optional-unfurl_media: false
+        continue-on-error: true
