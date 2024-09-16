@@ -15,6 +15,11 @@ jobs:
       - name: Debug GitHub Context
         run: |
           echo "${{ toJson(github) }}"
+
+      - name: Check Slack Token and Channel
+        run: |
+          echo "SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}"
+          echo "Slack Channel: general"
         
       - name: Notify Slack
         uses: archive/github-actions-slack@v2.0.0
@@ -26,6 +31,7 @@ jobs:
             Test
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
+        continue-on-error: true
       
       - name: Close the issue
         run: gh issue close --comment "Closing issue. https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
