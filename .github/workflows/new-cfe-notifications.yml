@@ -29,11 +29,6 @@ jobs:
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
         continue-on-error: true
-      
-      # - name: Close the issue
-      #   run: gh issue close --comment "Closing issue. https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}" "https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
   cfe-approved:
@@ -78,3 +73,28 @@ jobs:
         env:
           RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
           GH_TOKEN: ${{ github.token }}
+      - name: Close CFE Issue
+        run: gh issue close --comment "Closing issue. ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  cfe-rejected:
+    if: github.event.label.name == 'CFE Rejected'
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Notify Slack
+        uses: archive/github-actions-slack@v2.0.0
+        id: notify
+        with:
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
+          slack-channel: "test"
+          slack-text: |
+            CFE request rejected: ${{ github.event.issue.title }}
+            ${{ github.event.issue.html_url }}
+          slack-optional-unfurl_links: false
+          slack-optional-unfurl_media: false
+        continue-on-error: true
+      - name: Close CFE Issue
+        run: gh issue close --comment "Closing issue. ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
