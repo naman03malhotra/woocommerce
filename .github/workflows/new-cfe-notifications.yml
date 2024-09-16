@@ -8,7 +8,7 @@ permissions:
   contents: write
 
 jobs:
-  send-slack-notification:
+  cfe-created:
     if: github.event.label.name == 'code freeze exception'
     runs-on: ubuntu-20.04
     steps:
@@ -23,12 +23,37 @@ jobs:
           slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
           slack-channel: "test"
           slack-text: |
-            Test
+            New CFE request: ${{ github.event.issue.title }}
+            ${{ github.event.issue.html_url }}
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
         continue-on-error: true
       
       - name: Close the issue
         run: gh issue close --comment "Closing issue. https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}" "https://github.com/${{ github.repository }}/issues/${{ github.event.issue.number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  cfe-approved:
+    if: github.event.label.name == 'CFE Approved'
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Extract PR URL from issue body
+        id: extract-pr
+        run: |
+          PR_URL=$(echo "${{ github.event.issue.body }}" | grep -oP 'https://github.com/[^/]+/[^/]+/pull/\d+')
+          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+        
+      - name: Add label 'merge to trunk' to PR
+        run: |
+          PR_NUMBER=$(echo "${{ env.PR_URL }}" | grep -oP '\d+$')
+          gh pr edit $PR_NUMBER --add-label "merge to trunk"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Change milestone of the issue
+        run: |
+          gh issue edit ${{ github.event.issue.number }} --milestone "CFE Approved Milestone"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
