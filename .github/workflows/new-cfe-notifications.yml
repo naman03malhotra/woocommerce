@@ -45,10 +45,10 @@ jobs:
           PR_URL=$(echo "${{ github.event.issue.body }}" | grep -oP 'https://github.com/[^/]+/[^/]+/pull/\d+')
           echo "PR_URL=$PR_URL" >> $GITHUB_ENV
         
-      - name: Add label 'merge to trunk' to PR
+      - name: Add label 'cherry pick to trunk' to PR
         run: |
           PR_NUMBER=$(echo "${{ env.PR_URL }}" | grep -oP '\d+$')
-          gh pr edit $PR_NUMBER --add-label "merge to trunk"
+          gh pr edit $PR_NUMBER --add-label "cherry pick to trunk"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
