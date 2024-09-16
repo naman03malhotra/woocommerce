@@ -13,14 +13,14 @@ body:
         * If rejected, a pull request targeting `trunk` will be created.
         
         In either case you are responsible for managing the pull request as usual (provide a description, assign reviewers, ensure that CI jobs pass...)
-  # - type: input
-  #   id: release-number
-  #   attributes:
-  #     label: "Which release does this exception apply to?"
-  #     description: "Format: X.Y.Z"
-  #     placeholder: "9.7.0"
-  #   validations:
-  #     required: true
+  - type: input
+    id: release-number
+    attributes:
+      label: "Which release does this exception apply to?"
+      description: "Format: X.Y"
+      placeholder: "7.0"
+    validations:
+      required: true
   - type: textarea
     id: pr-urls
     attributes:

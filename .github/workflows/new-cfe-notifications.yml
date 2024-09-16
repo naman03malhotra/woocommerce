@@ -44,16 +44,36 @@ jobs:
         id: extract-pr
         run: |
           PR_URL=$(echo "${{ github.event.issue.body }}" | grep -oP 'https://github.com/[^/]+/[^/]+/pull/\d+')
-          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+
+          if [[ -z "$PR_URL" ]]; then
+            echo "No valid PR URL found in the issue body. Exiting."
+            exit 1
+          else
+            echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+          fi
         
       - name: Add label 'cherry pick to trunk' to PR
         run: |
-          gh pr edit "${{ env.PR_URL }}" --add-label "cherry pick to trunk"
+          gh pr edit $PR_URL --add-label "cherry pick to trunk"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ env.PR_URL }}
 
-      - name: Change milestone of the issue
+      - name: Extract Release Number from Issue Body
+        id: extract-release
         run: |
-          gh issue edit ${{ github.event.issue.number }} --milestone "CFE Approved Milestone"
+          RELEASE_NUMBER=$(echo "${{ github.event.issue.body }}" | grep -oP '\b\d+\.\d+\b')
+          if [[ -z "$RELEASE_NUMBER" ]]; then
+            echo "No valid release number found in the issue body. Aborting."
+            exit 1
+          fi
+          echo "RELEASE_NUMBER=$RELEASE_NUMBER" >> $GITHUB_ENV
+          echo "Extracted Release Number: $RELEASE_NUMBER"
+
+      - name: Apply Milestone to the Issue
+        run: |
+          MILESTONE="release/$RELEASE_NUMBER"
+          echo "Applying milestone: $MILESTONE"
+          gh issue edit ${{ github.event.issue.number }} --milestone "$MILESTONE"
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
