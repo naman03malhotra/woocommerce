@@ -47,9 +47,7 @@ jobs:
         
       - name: Add label 'cherry pick to trunk' to PR
         run: |
-          PR_NUMBER=$(echo "${{ env.PR_URL }}" | grep -oP '\d+$')
-          echo "Extracted PR Number: $PR_NUMBER"
-          gh pr edit $PR_NUMBER --add-label "cherry pick to trunk"
+          gh pr edit "${{ env.PR_URL }}" --add-label "cherry pick to trunk"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
