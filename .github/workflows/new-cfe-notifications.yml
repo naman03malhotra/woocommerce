@@ -74,7 +74,7 @@ jobs:
         run: |
           MILESTONE="release/$RELEASE_NUMBER"
           echo "Applying milestone: $MILESTONE"
-          gh issue edit ${{ github.event.issue.number }} --milestone "$MILESTONE"
+          gh issue edit ${{ github.event.issue.html_url }} --milestone "$MILESTONE"
         env:
           RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
           GH_TOKEN: ${{ github.token }}
