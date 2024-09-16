@@ -73,10 +73,12 @@ jobs:
         env:
           RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
           GH_TOKEN: ${{ github.token }}
+  
       - name: Close CFE Issue
         run: gh issue close --comment "Closing issue as CFE is Approved ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
       - name: Notify Slack
         uses: archive/github-actions-slack@v2.0.0
         id: notify
@@ -104,15 +106,21 @@ jobs:
           fi
           echo "RELEASE_NUMBER=$RELEASE_NUMBER" >> $GITHUB_ENV
           echo "Extracted Release Number: $RELEASE_NUMBER"
+  
       - name: Apply Milestone to the Issue
         run: |
           MILESTONE="$RELEASE_NUMBER.0"
           echo "Applying milestone: $MILESTONE"
           gh issue edit ${{ github.event.issue.html_url }} --milestone "$MILESTONE"
+        env:
+          RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
+          GH_TOKEN: ${{ github.token }}
+
       - name: Close CFE Issue
         run: gh issue close --comment "Closing issue as CFE is rejected - ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Notify Slack
         uses: archive/github-actions-slack@v2.0.0
         id: notify
