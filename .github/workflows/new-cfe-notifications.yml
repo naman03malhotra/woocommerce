@@ -6,7 +6,7 @@ on:
 permissions:
   issues: write
   contents: write
-  pr: write
+  pull-requests: write
 
 jobs:
   cfe-created:
