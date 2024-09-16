@@ -77,3 +77,4 @@ jobs:
           gh issue edit ${{ github.event.issue.number }} --milestone "$MILESTONE"
         env:
           RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
+          GH_TOKEN: ${{ github.token }}
