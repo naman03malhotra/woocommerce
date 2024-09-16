@@ -94,6 +94,21 @@ jobs:
     if: github.event.label.name == 'CFE Rejected'
     runs-on: ubuntu-20.04
     steps:
+      - name: Extract Release Number from Issue Body
+        id: extract-release
+        run: |
+          RELEASE_NUMBER=$(echo "${{ github.event.issue.body }}" | grep -oP '\b\d+\.\d+\b')
+          if [[ -z "$RELEASE_NUMBER" ]]; then
+            echo "No valid release number found in the issue body. Aborting."
+            exit 1
+          fi
+          echo "RELEASE_NUMBER=$RELEASE_NUMBER" >> $GITHUB_ENV
+          echo "Extracted Release Number: $RELEASE_NUMBER"
+      - name: Apply Milestone to the Issue
+        run: |
+          MILESTONE="$RELEASE_NUMBER.0"
+          echo "Applying milestone: $MILESTONE"
+          gh issue edit ${{ github.event.issue.html_url }} --milestone "$MILESTONE"
       - name: Close CFE Issue
         run: gh issue close --comment "Closing issue as CFE is rejected - ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
         env:
