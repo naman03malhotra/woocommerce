@@ -6,6 +6,7 @@ on:
 permissions:
   issues: write
   contents: write
+  pr: write
 
 jobs:
   cfe-created:
