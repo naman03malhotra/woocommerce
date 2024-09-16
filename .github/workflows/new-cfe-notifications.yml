@@ -72,7 +72,7 @@ jobs:
 
       - name: Apply Milestone to the Issue
         run: |
-          MILESTONE="release/$RELEASE_NUMBER"
+          MILESTONE="$RELEASE_NUMBER.0"
           echo "Applying milestone: $MILESTONE"
           gh issue edit ${{ github.event.issue.html_url }} --milestone "$MILESTONE"
         env:
