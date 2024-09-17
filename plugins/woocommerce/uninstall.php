@@ -1,7 +1,7 @@
 <?php
 /**
  * WooCommerce Uninstall
- *
+ * CFE test
  * Uninstalling WooCommerce deletes user roles, pages, tables, and options.
  * asdas
  * @package WooCommerce\Uninstaller
