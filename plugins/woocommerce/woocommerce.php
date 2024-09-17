@@ -4,6 +4,7 @@
  * Plugin URI: https://woocommerce.com/
  * Description: An ecommerce toolkit that helps you sell anything. Beautifully.
  * Version: 9.4.0-dev
+ CFE test
  * Author: Automattic
  * Author URI: https://woocommerce.com
  * Text Domain: woocommerce
