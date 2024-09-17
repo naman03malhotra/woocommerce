@@ -4,23 +4,11 @@ on:
         types: [closed]
     workflow_dispatch:
         inputs:
-            # release_branch:
-            #     description: Provide the release branch you want to cherry pick into. Example release/6.9
-            #     default: ''
-            #     required: true
-            # pull_requests:
-            #     description: The pull request number.
-            #     default: ''
-            #     required: true
-            # skipSlackPing:
-            #     description: 'Skip Slack Ping: If true, the Slack ping will be skipped (useful for testing)'
-            #     type: boolean
-            #     required: false
-            #     default: false
-            # slackChannelOverride:
-            #     description: 'Slack Channel Override: The channel ID to send the Slack ping about the code freeze violation'
-            #     required: false
-            #     default: ''
+            skipSlackPing:
+                description: 'Skip Slack Ping: If true, the Slack ping will be skipped (useful for testing)'
+                type: boolean
+                required: false
+                default: false
 
 env:
     GIT_COMMITTER_NAME: 'WooCommerce Bot'
@@ -36,32 +24,31 @@ jobs:
         runs-on: ubuntu-20.04
         outputs:
             run: ${{ steps.check.outputs.run }}
+            base_ref: ${{ steps.fetch_pr_details.outputs.base_ref }}
         steps:
             - name: Fetch Pull Request Details
-              if: github.event.issue.pull_request
+              if: github.event.pull_request
               id: fetch_pr_details
-              uses: actions/github-script@v6
+              uses: actions/github-script@v7
               with:
                 script: |
-                  const issue = context.payload.issue;
-                  const pullRequestUrl = issue.pull_request.url;
+                  const pullRequestUrl = context.payload.pull_request.url;
                   const prDetails = await github.request(pullRequestUrl);
                   core.setOutput('base_ref', prDetails.data.base.ref);
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
             - name: check
               id: check
-              uses: actions/github-script@v6
+              uses: actions/github-script@v7
               with:
                   script: |
                       const baseRef = process.env.BASE_REF;
                       console.log("baseRef:", baseRef);
-
                       let run = false;
-
                       const isBot = context.payload.pull_request && ( context.payload.pull_request.user.login == 'github-actions[bot]' || context.payload.pull_request.user.type == 'Bot' );
-
+                      console.log("isBot:", isBot);
+                      console.log("baseRef.startsWith('release/'):", baseRef.startsWith('release/'));
                       if ( !isBot && baseRef.startsWith( 'release/' ) ) {
                         core.setOutput( 'run', 'true' );
                       } else {
@@ -73,7 +60,7 @@ jobs:
     prep:
         name: Prep inputs
         runs-on: ubuntu-20.04
-        if: ${{ needs.check.outputs.run == 'true' }}
+        if: needs.verify.outputs.run == 'true'
         needs: verify
         outputs:
             release: ${{ steps.prep-inputs.outputs.release }}
@@ -82,15 +69,19 @@ jobs:
         steps:
             - name: Prep inputs
               id: prep-inputs
-              uses: actions/github-script@v6
+              uses: actions/github-script@v7
               with:
                   script: |
                       const event = ${{ toJSON( github.event ) }}
-
-                      const releaseBranch = '${{ steps.verify.outputs.base_ref }}'
+                      const releaseBranch = '${{ needs.verify.outputs.base_ref }}'
                       const version = releaseBranch.replace( 'release/', '' )
+                      const pr = event.pull_request.number
+                      // Output the values
+                      console.log( 'releaseBranch:', releaseBranch )
+                      console.log( 'version:', version )
+                      console.log( 'pr:', pr )
     
-                      core.setOutput( 'pr', '${{ github.event.pull_request.number }}' )
+                      core.setOutput( 'pr', pr )
                       core.setOutput( 'version', version )
                       core.setOutput( 'release', releaseBranch )
 
@@ -101,7 +92,7 @@ jobs:
         steps:
             - name: Check for release branch
               id: release-breanch-check
-              uses: actions/github-script@v6
+              uses: actions/github-script@v7
               with:
                   script: |
                       // This will throw an error for non-200 responses, which prevents subsequent jobs from completing, as desired.
@@ -136,7 +127,7 @@ jobs:
 
             - name: Get commit sha from PR
               id: commit-sha
-              uses: actions/github-script@v6
+              uses: actions/github-script@v7
               with:
                   script: |
                       const pr = await github.rest.pulls.get({
@@ -144,28 +135,20 @@ jobs:
                         repo: context.repo.repo,
                         pull_number: '${{ needs.prep.outputs.pr }}'
                       })
-
                       core.setOutput( 'sha', pr.data.merge_commit_sha )
-
             - name: Cherry pick
               run: |
                   git cherry-pick ${{ steps.commit-sha.outputs.sha }} -m1
-
-            - name: Commit changes for cherry pick
-              run: git commit --no-verify -am "Prep for cherry pick ${{ needs.prep.outputs.pr }}"
-
             - name: Push cherry pick branch up
               run: git push origin cherry-pick-${{ needs.prep.outputs.version }}/${{ needs.prep.outputs.pr }}
 
             - name: Create the PR for cherry pick branch
               id: cherry-pick-pr
-              uses: actions/github-script@v6
+              uses: actions/github-script@v7
               with:
                   script: |
                       let cherryPickPRBody = "This PR cherry-picks the following PRs into the trunk branch:\n";
-
                       cherryPickPRBody = `${cherryPickPRBody}` + `* #${{ needs.prep.outputs.pr }}` + "\n";
-
                       const pr = await github.rest.pulls.create({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
@@ -174,39 +157,31 @@ jobs:
                         base: "trunk",
                         body: cherryPickPRBody
                       })
-
                       core.setOutput( 'cherry-pick-pr', pr.data.html_url )
-
+                      console.log( 'cherry-pick-pr URL:', pr.data.html_url )
                       // label PR
-
                       const label = await github.rest.issues.addLabels({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
                         issue_number: pr.data.number,
                         labels: ["metric: code freeze exception"],
                       });
-
-            # - name: Notify Slack on failure
-            #   if: ${{ failure() && inputs.skipSlackPing != true }}
-            #   uses: archive/github-actions-slack@v2.0.0
-            #   with:
-            #       slack-bot-user-oauth-access-token: ${{ secrets.CODE_FREEZE_BOT_TOKEN }}
-            #       slack-channel: ${{ inputs.slackChannelOverride || secrets.WOO_RELEASE_SLACK_NOTIFICATION_CHANNEL }}
-            #       slack-text: |
-            #           :warning-8c: Code freeze violation. PR(s) created that breaks the Code Freeze for '${{ needs.prep.outputs.release }}' :ice_cube:
-
-            #           An attempt to cherry pick PR(s) into outgoing release '${{ needs.prep.outputs.release }}' has failed. This could be due to a merge conflict or something else that requires manual attention. Please check: https://github.com/woocommerce/woocommerce/pull/${{ needs.prep.outputs.pr }}
-
-            # - name: Notify Slack on success
-            #   if: ${{ success() && inputs.skipSlackPing != true }}
-            #   uses: archive/github-actions-slack@v2.0.0
-            #   with:
-            #       slack-bot-user-oauth-access-token: ${{ secrets.CODE_FREEZE_BOT_TOKEN }}
-            #       slack-channel: ${{ inputs.slackChannelOverride || secrets.WOO_RELEASE_SLACK_NOTIFICATION_CHANNEL }}
-            #       slack-text: |
-            #           :warning-8c: Code freeze violation. PR(s) created that breaks the Code Freeze for '${{ needs.prep.outputs.release }}' :ice_cube:
-
-            #           Release lead please review:
-
-            #           ${{ steps.cherry-pick-pr.outputs.cherry-pick-pr }}
-            #           ${{ steps.deletion-pr.outputs.deletion-pr }}
+            - name: Notify Slack on failure
+              if: ${{ failure() && inputs.skipSlackPing != true }}
+              uses: archive/github-actions-slack@v2.0.0
+              with:
+                  slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
+                  slack-channel: "test"
+                  slack-text: |
+                      :warning-8c: CFE cherry pick failed for '${{ needs.prep.outputs.release }}'
+                      An attempt to cherry pick PR(s) into outgoing trunk for '${{ needs.prep.outputs.release }}' has failed. This could be due to a merge conflict or something else that requires manual attention. Please check: https://github.com/woocommerce/woocommerce/pull/${{ needs.prep.outputs.pr }}
+            - name: Notify Slack on success
+              if: ${{ success() && inputs.skipSlackPing != true }}
+              uses: archive/github-actions-slack@v2.0.0
+              with:
+                  slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
+                  slack-channel: "test"
+                  slack-text: |
+                      :info: CFE cherry pick succeeded for '${{ needs.prep.outputs.release }}'
+                      Please merge the following PR :pr: into trunk:
+                      ${{ steps.cherry-pick-pr.outputs.cherry-pick-pr }}

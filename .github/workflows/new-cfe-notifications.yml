@@ -74,11 +74,6 @@ jobs:
           RELEASE_NUMBER: ${{ env.RELEASE_NUMBER }}
           GH_TOKEN: ${{ github.token }}
   
-      - name: Close CFE Issue
-        run: gh issue close --comment "Closing issue as CFE is Approved ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  
       - name: Notify Slack
         uses: archive/github-actions-slack@v2.0.0
         id: notify
