@@ -169,6 +169,29 @@ WooCommerce comes with some sample data you can use to see how products look; im
 
 == Changelog ==
 
-= 9.4.0 2024-XX-XX =
+= 9.4.0 2024-10-06 =
+
+**WooCommerce**
+
+* Fix - CFE test [#36](https://github.com/woocommerce/woocommerce/pull/36)
+* Fix - Fix the order-items view for coupons, so we show the actually-used coupon info, if it exists.
+* Fix - Make Admin\API\Reports\Customers\DataStore::anonymize_customer accept an order instance as a parameter to ensure compatibility with the `woocommerce_privacy_remove_order_personal_data` hook.
+* Fix - Put site visibility badge behind the launch your store feature flag
+* Update - Update /shopper tests (first part), so they are passing against Pressable env.
+* Update - Updated wording on the Cart/Checkout shipping sidebars
+* Update - Update storybook file format in support with Storybook 7 story indexer.
+* Update - Update the rest of /merchant tests so they are passing against Pressable env.
+* Dev - Coding standatds: fix PSR-4 naming violation in tests (part 1).
+* Dev - Coding standatds: fix PSR-4 naming violation in tests (part 2).
+* Dev - E2E tests: fix flakiness in page publishing action
+* Dev - Explicitly select the payment method on the customer payment page e2e test
+* Dev - Made XState utils updateQueryParam generic so that it can be reused in other XState machines
+* Tweak - Remove titles on Extensions and Themes tabs in the marketplace
+* Tweak - Update coming soon extensibility documentation
+* Performance - Don't update the script data transient for the same data
+* Performance - Only run woocommerce_admin_shared_settings filter on admin requests
+* Performance - Refactor Country Specs to use 'in' operator
+* Enhancement - Add filters for custom orderby query params for WC Analytics
+
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce/trunk/changelog.txt).
