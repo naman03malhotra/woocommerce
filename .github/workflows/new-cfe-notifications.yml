@@ -37,7 +37,7 @@ jobs:
           BODY="${{ github.event.issue.body }}"
 
           PR_URL=$(echo "$BODY" | grep -oP 'https://github.com/[^/]+/[^/]+/pull/\d+')
-          PR_NUMBER=$(echo "$BODY" | grep -oP '(?<=### PR number\s+)\d+')
+          PR_NUMBER=$(echo "$ISSUE_BODY" | grep -oP '### PR number\s*\n\s*\d+' | grep -oP '\d+')
 
           echo "PR Number: $PR_NUMBER"
 
