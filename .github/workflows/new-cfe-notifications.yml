@@ -37,7 +37,7 @@ jobs:
           BODY="${{ github.event.issue.body }}"
 
           PR_URL=$(echo "$BODY" | grep -oP 'https://github.com/[^/]+/[^/]+/pull/\d+')
-          PR_NUMBER=$(echo "$BODY" | grep -oP '(?<=### What PR implement the changes for which the exception is requested\?.*\n\n)[0-9]+' || true)
+          PR_NUMBER=$(echo "$BODY" | grep -oP '(?<=### PR number\?.*\n\n)[0-9]+')
           echo "PR Number: $PR_NUMBER"
 
           if [[ -z "$PR_URL" ]]; then
