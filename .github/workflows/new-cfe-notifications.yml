@@ -34,7 +34,11 @@ jobs:
       - name: Extract PR URL from issue body
         id: extract-pr
         run: |
-          PR_URL=$(echo "${{ github.event.issue.body }}" | grep -oP 'https://github.com/[^/]+/[^/]+/pull/\d+')
+          BODY="${{ github.event.issue.body }}"
+
+          PR_URL=$(echo "$BODY" | grep -oP 'https://github.com/[^/]+/[^/]+/pull/\d+')
+          PR_NUMBER=$(echo "$BODY" | grep -oP '(?<=### What PR implement the changes for which the exception is requested\?.*\n\n)[0-9]+' || true)
+          echo "PR URL: $PR_URL"
 
           if [[ -z "$PR_URL" ]]; then
             echo "No valid PR URL found in the issue body. Exiting."
