@@ -39,8 +39,6 @@ jobs:
           PR_URL=$(echo "$BODY" | grep -oP 'https://github.com/[^/]+/[^/]+/pull/\d+')
           PR_NUMBER=$(echo "$BODY" | grep -oP 'pull\/\K\d+')
 
-          echo "PR Number: $PR_NUMBER"
-
           # if [[ -z "$PR_URL" ]]; then
           #   echo "No valid PR URL found in the issue body. Exiting."
           #   exit 1
@@ -59,7 +57,9 @@ jobs:
 
       - name: Add label 'cherry pick to trunk' to PR
         run: |
-          gh pr edit $PR_NUMBER --add-label "cherry pick to trunk"
+          OWNER="${{ github.event.repository.owner.login }}"
+          REPO="${{ github.event.repository.name }}"
+          gh pr edit $PR_NUMBER --add-label "cherry pick to trunk" --repo $OWNER/$REPO
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ env.PR_URL }}
