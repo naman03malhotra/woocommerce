@@ -41,16 +41,25 @@ jobs:
 
           echo "PR Number: $PR_NUMBER"
 
-          if [[ -z "$PR_URL" ]]; then
-            echo "No valid PR URL found in the issue body. Exiting."
-            exit 1
+          # if [[ -z "$PR_URL" ]]; then
+          #   echo "No valid PR URL found in the issue body. Exiting."
+          #   exit 1
+          # else
+          #   echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+          # fi
+
+          # Validate input: strictly numeric
+          if [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
+            echo "Valid PR number: $PR_NUMBER"
+            echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
           else
-            echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+            echo "Invalid PR number. Exiting."
+            exit 1
           fi
 
       - name: Add label 'cherry pick to trunk' to PR
         run: |
-          gh pr edit $PR_URL --add-label "cherry pick to trunk"
+          gh pr edit $PR_NUMBER --add-label "cherry pick to trunk"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ env.PR_URL }}
