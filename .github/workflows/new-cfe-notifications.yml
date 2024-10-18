@@ -118,6 +118,12 @@ jobs:
               core.setFailed("No valid release number found after the 'Which release does this request apply to?' section. Aborting.");
             }
 
+      - name: Comment that your request has been approved
+        run: |
+          gh issue comment ${{ github.event.issue.html_url }} --body "Your request has been approved. Please go ahead and merge the PR."
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Apply Milestone to the Issue
         run: |
           MILESTONE="$RELEASE_NUMBER.0"
