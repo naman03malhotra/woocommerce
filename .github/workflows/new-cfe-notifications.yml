@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   request-created:
-    if: github.event.label.name == 'code freeze exception' || github.event.label.name == 'point release request'
+    if: ${{ github.event.label.name == 'code freeze exception' || github.event.label.name == 'point release request' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Set Slack Message
@@ -34,7 +34,7 @@ jobs:
         continue-on-error: true
 
   request-approved:
-    if: github.event.label.name == 'CFE Approved'
+    if: ${{ github.event.label.name == 'Approved' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Extract PR number from issue body
@@ -128,7 +128,7 @@ jobs:
         continue-on-error: true
 
   request-rejected:
-    if: github.event.label.name == 'CFE Rejected'
+    if: ${{ github.event.label.name == 'Rejected' }}
     runs-on: ubuntu-20.04
     steps:
       - name: Extract Release Number from Issue Body
