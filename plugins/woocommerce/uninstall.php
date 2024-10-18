@@ -5,7 +5,7 @@
  * Uninstalling WooCommerce deletes user roles, pages, tables, and options.
  *
  * @package WooCommerce\Uninstaller
- * @version 2.3.0
+ * @version 2.3.0 test 123
  */
 
 use Automattic\WooCommerce\Admin\Notes\Notes;
