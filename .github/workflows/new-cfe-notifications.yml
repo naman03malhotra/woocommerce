@@ -1,4 +1,4 @@
-name: New CFE workflow notifications
+name: New CFE/PRR workflow notifications
 on:
   issues:
     types: [labeled]
@@ -8,25 +8,32 @@ permissions:
   pull-requests: write
 
 jobs:
-  cfe-created:
-    if: github.event.label.name == 'code freeze exception'
+  request-created:
+    if: github.event.label.name == 'code freeze exception' || github.event.label.name == 'point release request'
     runs-on: ubuntu-20.04
     steps:
+      - name: Set Slack Message
+        id: set-message
+        run: |
+          if [ "${{ github.event.label.name }}" == 'code freeze exception' ]; then
+            MESSAGE=":arrow_right: New CFE request: ${{ github.event.issue.title }} ${{ github.event.issue.html_url }}"
+          else
+            MESSAGE=":arrow_right: New PRR request: ${{ github.event.issue.title }} ${{ github.event.issue.html_url }}"
+          fi
+          echo "SLACK_MESSAGE=$MESSAGE" >> $GITHUB_ENV
+
       - name: Notify Slack
         uses: archive/github-actions-slack@v2.0.0
         id: notify
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.CODE_FREEZE_BOT_TOKEN }}
           slack-channel: ${{ secrets.WOO_RELEASE_SLACK_CHANNEL }}
-          slack-text: |
-            :arrow_right: New CFE request: ${{ github.event.issue.title }}
-            ${{ github.event.issue.html_url }}
+          slack-text: ${{ env.SLACK_MESSAGE }}
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
         continue-on-error: true
 
-
-  cfe-approved:
+  request-approved:
     if: github.event.label.name == 'CFE Approved'
     runs-on: ubuntu-20.04
     steps:
@@ -99,20 +106,28 @@ jobs:
           RELEASE_NUMBER: ${{ steps.extract-release.outputs.RELEASE_NUMBER }}
           GH_TOKEN: ${{ github.token }}
 
+      - name: Set Slack Message
+        id: set-slack-message
+        run: |
+          if [[ "${{ github.event.issue.labels.*.name }}" == *'code freeze exception'* ]]; then
+            MESSAGE=":white_check_mark: CFE request approved: ${{ github.event.issue.title }}\n${{ github.event.issue.html_url }}"
+          else
+            MESSAGE=":white_check_mark: PRR request approved: ${{ github.event.issue.title }}\n${{ github.event.issue.html_url }}"
+          fi
+          echo "SLACK_MESSAGE=$MESSAGE" >> $GITHUB_ENV
+
       - name: Notify Slack
         uses: archive/github-actions-slack@v2.0.0
         id: notify
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.CODE_FREEZE_BOT_TOKEN }}
           slack-channel: ${{ secrets.WOO_CORE_RELESES_DAILY_SLACK_CHANNEL }}
-          slack-text: |
-            :white_check_mark: CFE request approved: ${{ github.event.issue.title }}
-            ${{ github.event.issue.html_url }}
+          slack-text: ${{ env.SLACK_MESSAGE }}
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
         continue-on-error: true
 
-  cfe-rejected:
+  request-rejected:
     if: github.event.label.name == 'CFE Rejected'
     runs-on: ubuntu-20.04
     steps:
@@ -152,9 +167,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Close CFE Issue
-        run: gh issue close --comment "Closing issue as CFE is rejected - ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
+        run: gh issue close --comment "Closing issue as the request is rejected - ${{ github.event.issue.html_url }}" "${{ github.event.issue.html_url }}"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set Slack Message
+        id: set-slack-message
+        run: |
+          if [[ "${{ github.event.issue.labels.*.name }}" == *'code freeze exception'* ]]; then
+            MESSAGE=":x: CFE request rejected: ${{ github.event.issue.title }}\n${{ github.event.issue.html_url }}"
+          else
+            MESSAGE=":x: PRR request rejected: ${{ github.event.issue.title }}\n${{ github.event.issue.html_url }}"
+          fi
+          echo "SLACK_MESSAGE=$MESSAGE" >> $GITHUB_ENV
 
       - name: Notify Slack
         uses: archive/github-actions-slack@v2.0.0
@@ -162,9 +187,7 @@ jobs:
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.CODE_FREEZE_BOT_TOKEN }}
           slack-channel: ${{ secrets.WOO_CORE_RELESES_DAILY_SLACK_CHANNEL }}
-          slack-text: |
-            :x: CFE request rejected: ${{ github.event.issue.title }}
-            ${{ github.event.issue.html_url }}
+          slack-text: ${{ env.SLACK_MESSAGE }}
           slack-optional-unfurl_links: false
           slack-optional-unfurl_media: false
         continue-on-error: true
