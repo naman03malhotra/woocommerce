@@ -132,10 +132,7 @@ export const getVersionCommand = new Command( 'get-version' )
 				'isTodayAcceleratedFreeze',
 				isTodayAcceleratedFreeze ? 'yes' : 'no'
 			);
-			setOutput(
-				'isTodayMonthlyFreeze',
-				isTodayMonthlyFreeze ? 'yes' : 'no'
-			);
+			setOutput( 'isTodayMonthlyFreeze', true ? 'yes' : 'no' );
 			setOutput( 'acceleratedVersion', acceleratedRelease.version );
 			setOutput( 'monthlyVersion', monthlyRelease.version );
 			setOutput( 'monthlyVersionXY', monthlyVersionXY );
