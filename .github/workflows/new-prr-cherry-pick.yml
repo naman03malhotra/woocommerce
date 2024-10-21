@@ -207,7 +207,7 @@ jobs:
                       const pr = await github.rest.pulls.create({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
-                        title: "Cherry pick ${{ needs.prep.outputs.pr }} into frozen release:" + ${{ needs.prep.outputs.frozenRelease }},
+                        title: "Cherry pick ${{ needs.prep.outputs.pr }} into frozen release:" + "${{ needs.prep.outputs.frozenRelease }}",
                         head: "cherry-pick-${{ needs.prep.outputs.frozenRelease }}/${{ needs.prep.outputs.pr }}",
                         base: "${{ needs.prep.outputs.frozenRelease }}",
                         body: cherryPickPRBody
