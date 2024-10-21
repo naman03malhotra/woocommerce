@@ -12,6 +12,7 @@
  * Requires PHP: 7.4
  *
  * @package WooCommerce
+  PRR test
  */
 
 defined( 'ABSPATH' ) || exit;
