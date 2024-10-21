@@ -10,6 +10,8 @@
  * Domain Path: /i18n/languages/
  * Requires at least: 6.5
  * Requires PHP: 7.4
+ * 
+ * PRR test
  *
  * @package WooCommerce
  */
