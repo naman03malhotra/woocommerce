@@ -44,7 +44,7 @@ jobs:
         working-directory: tools/monorepo-utils
 
       - name: Get version from the branch name workflow is running on
-        if: ${{ github.event.inputs.version != '' }}
+        if: ${{ github.event.inputs.version == '' }}
         uses: actions/github-script@v7
         id: extract-version
         with:
