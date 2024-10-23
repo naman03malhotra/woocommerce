@@ -15,7 +15,7 @@ env:
 
 jobs:
   build-prep:
-    name: Create changelog PR
+    name: Prep for changelog generation
     runs-on: ubuntu-20.04
     permissions:
       contents: write
@@ -43,6 +43,11 @@ jobs:
             pnpm build
         working-directory: tools/monorepo-utils
 
+  build-changelog:
+    name: Generate changelog changes and create PR
+    runs-on: ubuntu-20.04
+    needs: build-prep
+    steps:
       - name: Get version from the branch name workflow is running on
         if: ${{ github.event.inputs.version == '' }}
         uses: actions/github-script@v7
