@@ -85,20 +85,22 @@ jobs:
               uses: actions/github-script@v7
               with:
                   script: |
-                      const event = ${{ toJSON( github.event ) }}
-
-                      const releaseBranch = '${{ needs.verify.outputs.base_ref }}'
-                      const version = releaseBranch.replace( 'release/', '' )
-                      const pr = event.pull_request.number
+                      const event = JSON.parse(process.env.GITHUB_EVENT);
+                      const releaseBranch = process.env.BASE_REF;
+                      const version = releaseBranch.replace( 'release/', '' );
+                      const pr = event.pull_request.number;
 
                       // Output the values
-                      console.log( 'releaseBranch:', releaseBranch )
-                      console.log( 'version:', version )
-                      console.log( 'pr:', pr )
+                      console.log( 'releaseBranch:', releaseBranch );
+                      console.log( 'version:', version );
+                      console.log( 'pr:', pr );
     
-                      core.setOutput( 'pr', pr )
-                      core.setOutput( 'version', version )
-                      core.setOutput( 'release', releaseBranch )
+                      core.setOutput( 'pr', pr );
+                      core.setOutput( 'version', version );
+                      core.setOutput( 'release', releaseBranch );
+              env:
+                GITHUB_EVENT: ${{ toJSON(github.event) }}
+                BASE_REF: ${{ needs.verify.outputs.base_ref }}
 
     check-release-branch-exists:
         name: Check for existence of release branch
@@ -146,16 +148,21 @@ jobs:
               with:
                   script: |
                       const pr = await github.rest.pulls.get({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        pull_number: '${{ needs.prep.outputs.pr }}'
+                        owner: process.env.REPO_OWNER,
+                        repo: process.env.REPO_NAME,
+                        pull_number: process.env.PR_NUMBER
                       })
-
-                      core.setOutput( 'sha', pr.data.merge_commit_sha )
+                      core.setOutput('sha', pr.data.merge_commit_sha)
+              env:
+                REPO_OWNER: ${{ github.repository_owner }}
+                REPO_NAME: ${{ github.repository }}
+                PR_NUMBER: ${{ needs.prep.outputs.pr }}
 
             - name: Cherry pick
               run: |
-                  git cherry-pick ${{ steps.commit-sha.outputs.sha }} -m1
+                  git cherry-pick $SHA -m1
+              env:
+                SHA: ${{ steps.commit-sha.outputs.sha }}
 
             - name: Push cherry pick branch up
               run: git push origin cherry-pick-${{ needs.prep.outputs.version }}/${{ needs.prep.outputs.pr }}
@@ -166,29 +173,25 @@ jobs:
               with:
                   script: |
                       let cherryPickPRBody = "This PR cherry-picks the following PRs into the trunk branch:\n";
-
-                      cherryPickPRBody = `${cherryPickPRBody}` + `* #${{ needs.prep.outputs.pr }}` + "\n";
+                      cherryPickPRBody += `* #${process.env.PR_NUMBER}\n`;
 
                       const pr = await github.rest.pulls.create({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        title: "Cherry pick ${{ needs.prep.outputs.pr }} into trunk",
-                        head: "cherry-pick-${{ needs.prep.outputs.version }}/${{ needs.prep.outputs.pr }}",
+                        owner: process.env.REPO_OWNER,
+                        repo: process.env.REPO_NAME,
+                        title: `Cherry pick ${process.env.PR_NUMBER} into trunk`,
+                        head: `cherry-pick-${process.env.VERSION}/${process.env.PR_NUMBER}`,
                         base: "trunk",
                         body: cherryPickPRBody
                       })
 
-                      core.setOutput( 'cherry-pick-pr', pr.data.html_url )
-                      console.log( 'cherry-pick-pr URL:', pr.data.html_url )
-
-                      // label PR
-
-                      const label = await github.rest.issues.addLabels({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        issue_number: pr.data.number,
-                        labels: ["metric: code freeze exception"],
-                      });
+                      core.setOutput('cherry-pick-pr', pr.data.html_url)
+                      console.log('cherry-pick-pr URL:', pr.data.html_url)
+                      // ... existing code ...
+              env:
+                REPO_OWNER: ${{ github.repository_owner }}
+                REPO_NAME: ${{ github.repository }}
+                PR_NUMBER: ${{ needs.prep.outputs.pr }}
+                VERSION: ${{ needs.prep.outputs.version }}
 
             - name: Notify Slack on failure
               if: ${{ failure() && inputs.skipSlackPing != true }}

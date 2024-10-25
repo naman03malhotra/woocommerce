@@ -86,9 +86,8 @@ jobs:
               uses: actions/github-script@v7
               with:
                   script: |
-                      const event = ${{ toJSON( github.event ) }}
-
-                      const releaseBranch = '${{ needs.verify.outputs.base_ref }}'
+                      const event = JSON.parse(process.env.GITHUB_EVENT);
+                      const releaseBranch = process.env.BASE_REF;
                       const version = releaseBranch.replace( 'release/', '' )
                       const pr = event.pull_request.number
 
@@ -181,16 +180,21 @@ jobs:
               with:
                   script: |
                       const pr = await github.rest.pulls.get({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        pull_number: '${{ needs.prep.outputs.pr }}'
+                        owner: process.env.REPO_OWNER,
+                        repo: process.env.REPO_NAME,
+                        pull_number: process.env.PR_NUMBER
                       })
-
-                      core.setOutput( 'sha', pr.data.merge_commit_sha )
+                      core.setOutput('sha', pr.data.merge_commit_sha)
+              env:
+                REPO_OWNER: ${{ github.repository_owner }}
+                REPO_NAME: ${{ github.repository }}
+                PR_NUMBER: ${{ needs.prep.outputs.pr }}
 
             - name: Cherry pick
               run: |
-                  git cherry-pick ${{ steps.commit-sha.outputs.sha }} -m1
+                  git cherry-pick $SHA -m1
+              env:
+                SHA: ${{ steps.commit-sha.outputs.sha }}
 
             - name: Push cherry pick branch up
               run: git push origin cherry-pick-${{ needs.prep.outputs.frozenRelease }}/${{ needs.prep.outputs.pr }}
@@ -200,21 +204,20 @@ jobs:
               uses: actions/github-script@v7
               with:
                   script: |
-                      let cherryPickPRBody = "This PR cherry-picks the following PRs into the frozen release branch: " + "${{ needs.prep.outputs.frozenRelease }}";
-
-                      cherryPickPRBody = `${cherryPickPRBody}` + "\n" + `* #${{ needs.prep.outputs.pr }}` + "\n";
+                      let cherryPickPRBody = "This PR cherry-picks the following PRs into the frozen release branch: " + process.env.FROZEN_RELEASE;
+                      cherryPickPRBody += `\n* #${process.env.PR_NUMBER}\n`;
 
                       const pr = await github.rest.pulls.create({
-                        owner: context.repo.owner,
-                        repo: context.repo.repo,
-                        title: "Cherry pick ${{ needs.prep.outputs.pr }} into frozen release: " + "${{ needs.prep.outputs.frozenRelease }}",
-                        head: "cherry-pick-${{ needs.prep.outputs.frozenRelease }}/${{ needs.prep.outputs.pr }}",
-                        base: "${{ needs.prep.outputs.frozenRelease }}",
+                        owner: process.env.REPO_OWNER,
+                        repo: process.env.REPO_NAME,
+                        title: `Cherry pick ${process.env.PR_NUMBER} into frozen release: ${process.env.FROZEN_RELEASE}`,
+                        head: `cherry-pick-${process.env.FROZEN_RELEASE}/${process.env.PR_NUMBER}`,
+                        base: process.env.FROZEN_RELEASE,
                         body: cherryPickPRBody
                       })
 
-                      core.setOutput( 'cherry-pick-pr', pr.data.html_url )
-                      console.log( 'cherry-pick-pr URL:', pr.data.html_url )
+                      core.setOutput('cherry-pick-pr', pr.data.html_url)
+                      console.log('cherry-pick-pr URL:', pr.data.html_url)
 
                       // label PR
 
