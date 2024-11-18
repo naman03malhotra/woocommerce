@@ -88,13 +88,13 @@ jobs:
                       }
 
                       const currentReleaseTag = event.release.tag_name;
-                      let { nextMajor, nextMinor } = bumpMinorVersion( currentReleaseTag );
-                      const nextReleaseVersion = `${nextMajor}.${nextMinor}.0`;
-                      const nextReleaseBranch = `release/${nextMajor}.${nextMinor}`;
+                      const releaseBump = bumpMinorVersion( currentReleaseTag );
+                      const nextReleaseVersion = `${releaseBump.nextMajor}.${releaseBump.nextMinor}.0`;
+                      const nextReleaseBranch = `release/${releaseBump.nextMajor}.${releaseBump.nextMinor}`;
 
-
-                      let { nextMajor, nextMinor } = bumpMinorVersion( nextReleaseVersion );
-                      const milestoneForTrunk = `${nextMajor}.${nextMinor}.0`;
+                      // Get milestone version by bumping the next release version
+                      const milestoneBump = bumpMinorVersion( nextReleaseVersion );
+                      const milestoneForTrunk = `${milestoneBump.nextMajor}.${milestoneBump.nextMinor}.0`;
 
                       core.setOutput('nextReleaseBranch', nextReleaseBranch);
                       core.setOutput('nextReleaseVersion', nextReleaseVersion);
