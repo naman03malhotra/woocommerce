@@ -188,7 +188,7 @@ jobs:
     changelog-version-update-for-trunk:
         name: Update changelog and version for trunk
         runs-on: ubuntu-20.04
-        needs: [create-code-freeze-branch-and-milestone]
+        needs: verify-release
         permissions:
           contents: write
           pull-requests: write
