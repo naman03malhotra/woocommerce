@@ -6,6 +6,8 @@
  *
  * @package WooCommerce\Uninstaller
  * @version 2.3.0
+ * 
+ * TEst
  */
 
 use Automattic\WooCommerce\Admin\Notes\Notes;
