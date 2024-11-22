@@ -170,8 +170,10 @@ jobs:
         steps:
             - name: Checkout release branch
               uses: actions/checkout@v3
+              env:
+                FROZEN_RELEASE_BRANCH: ${{ needs.prep.outputs.frozenRelease }}
               with:
-                  fetch-depth: 0
+                ref: $FROZEN_RELEASE_BRANCH
 
             - name: Git fetch the frozen release branch
               run: git fetch origin $FROZEN_RELEASE_BRANCH
