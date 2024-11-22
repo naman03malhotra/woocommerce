@@ -287,7 +287,7 @@ jobs:
             - name: Comment on PR about the cherry picked PRs to be merged
               if: ${{ success() }}
               run: |
-                gh pr comment $HTML_URL --body "IMPORTANT: Merging this PR is critical to the release process and ensures that the bug does not regress in the future releases.\n\nA PR was created against `frozen release` (`$FROZEN_RELEASE_BRANCH`) for your changes. Please merge the following PR: $CHERRY_PICK_PR"
+                gh pr comment $HTML_URL --body $'IMPORTANT: Merging this PR is critical to the release process and ensures that the bug does not regress in the future releases.\n\nA PR was created against frozen release (`$FROZEN_RELEASE_BRANCH`) for your changes. Please merge the following PR: $CHERRY_PICK_PR'
               env:
                 GH_TOKEN: ${{ github.token }}
                 HTML_URL: ${{ github.event.pull_request.html_url }}
