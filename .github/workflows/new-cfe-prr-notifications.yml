@@ -208,6 +208,8 @@ jobs:
     runs-on: ubuntu-20.04
     needs:
       - verify
+    permissions:
+      issues: write
     env:
       RELEASE_NUMBER: ${{ needs.verify.outputs.release_number }}
     steps:
