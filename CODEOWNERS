@@ -1,4 +1,4 @@
-# Monorepo CI and package managers manifests.
+# Monorepo CI and package managers manifests. Test
 /.github/ @woocommerce/flux
 **/composer.json @woocommerce/flux
 **/package.json @woocommerce/flux
