@@ -223,7 +223,7 @@ jobs:
             
             const slackMessage = `:arrow_right: ${labelName === 'code freeze exception' ? ':ice_cube: New Code Freeze Exception request' : ':release: New Point Release Request'}: ${issueTitle} ${issueUrl}`;
 
-            const githubComment = `Your ${labelName === 'code freeze exception' ? 'Code Freeze Exception' : 'Point Release'} request has been created and awaiting approval from @woocommerce/solaris. Please note that your are targeting your fix for release: \`${process.env.RELEASE_NUMBER}\`, as per your base branch of PR.`;
+            const githubComment = `Your ${labelName === 'code freeze exception' ? 'Code Freeze Exception' : 'Point Release'} request has been created and awaiting approval from @woocommerce/solaris. Please note that your are targeting your fix for release: **${process.env.RELEASE_NUMBER}**, as per your base branch of PR.`;
             
             // Set the message as a core output
             core.setOutput('SLACK_MESSAGE', slackMessage);
