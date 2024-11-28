@@ -7,6 +7,7 @@
  * @package WooCommerce\Uninstaller
  * @version 2.3.0
  * CFE One - Test
+ * CFE Two - Test
  */
 
 use Automattic\WooCommerce\Admin\Notes\Notes;
