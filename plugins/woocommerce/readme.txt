@@ -36,7 +36,7 @@ Built-in tools and popular integrations help you efficiently manage your busines
 
 = Grow your business, add features, and monitor your store on the go =
 
-WooCommerce means business. Keep tabs on the performance metrics most important to you with [WooCommerce Admin](https://wordpress.org/plugins/woocommerce-admin/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=wp_org_repo_listing) – a powerful, customizable central dashboard for your store.
+WooCommerce means business. Keep tabs on the performance metrics most important to you with a powerful and flexible central dashboard built into WooCommerce.
 
 Expand your audience across marketing and social channels with [Google Ads](https://woocommerce.com/products/google-ads/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=wp_org_repo_listing), [HubSpot](https://woocommerce.com/products/hubspot-for-woocommerce/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=wp_org_repo_listing), [Mailchimp](https://woocommerce.com/products/mailchimp-for-woocommerce/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=wp_org_repo_listing), and [Facebook](https://woocommerce.com/products/facebook/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=wp_org_repo_listing) integrations. You can always check out the in-dashboard [Marketing Hub](https://woocommerce.com/document/marketing-hub/?utm_medium=referral&utm_source=wordpress.org&utm_campaign=wp_org_repo_listing) for fresh ideas and tips to help you succeed.
 
@@ -472,6 +472,5 @@ WooCommerce comes with some sample data you can use to see how products look; im
 * Enhancement - Removed CouponPageMoved class. [#52475](https://github.com/woocommerce/woocommerce/pull/52475)
 * Enhancement - Use product name as fallback alt text in product gallery [#51936](https://github.com/woocommerce/woocommerce/pull/51936)
 * Enhancement - [Experimental] Allow disabling product descriptions in the product summary. [#52503](https://github.com/woocommerce/woocommerce/pull/52503)
-
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce/trunk/changelog.txt).

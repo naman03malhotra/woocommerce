@@ -37,13 +37,12 @@ export class Admin extends CoreAdmin {
 		};
 
 		const editorLoaded = async () => {
-			// Wait for Editor to load.
 			await this.page
 				.getByRole( 'heading', {
-					name: `${ name } · Pattern`,
+					name: 'pattern',
 				} )
 				.waitFor();
-		};
+		  };
 
 		await Promise.any( [ welcomePopUp(), editorLoaded() ] );
 	}
