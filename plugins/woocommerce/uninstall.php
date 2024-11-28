@@ -15,6 +15,7 @@ use Automattic\WooCommerce\Internal\DataStores\Orders\OrdersTableDataStore;
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 global $wpdb, $wp_version;
+// PRR test
 
 wp_clear_scheduled_hook( 'woocommerce_scheduled_sales' );
 wp_clear_scheduled_hook( 'woocommerce_cancel_unpaid_orders' );
