@@ -41,6 +41,9 @@ export class Admin extends CoreAdmin {
 			await this.page
 				.getByRole( 'heading', {
 					name: `${ name } · Pattern`,
+			await this.page
+				.getByRole( 'heading', {
+					name: 'pattern',
 				} )
 				.waitFor();
 		};
