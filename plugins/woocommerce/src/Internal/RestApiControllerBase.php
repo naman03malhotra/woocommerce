@@ -22,6 +22,10 @@ use Exception;
  * otherwise the routes won't be registered:
  * $container->get( <full class name>::class )->register();
  *
+ * Also, the following must be added at the end of the 'init_hooks' method in the 'WooCommerce' class,
+ * otherwise the routes won't be registered:
+ * $container->get( <full class name>::class )->register();
+ *
  * Minimal controller example:
  *
  * class FoobarsController extends RestApiControllerBase {
