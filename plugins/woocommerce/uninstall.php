@@ -6,6 +6,7 @@
  *
  * @package WooCommerce\Uninstaller
  * @version 2.3.0
+ * Test CFE One for 9.6.0
  */
 
 use Automattic\WooCommerce\Admin\Notes\Notes;
