@@ -286,7 +286,7 @@ jobs:
         run: |
           gh issue comment "$ISSUE_URL" --body "This request has been approved. Please merge the PR to release branch when it is approved and ready to be merged.
 
-          You are targeting your fix for WC version: ${RELEASE_NUMBER}."
+          You are targeting your fix for WC version: **${RELEASE_NUMBER}**."
 
       - name: Set Slack Message
         id: set-message
