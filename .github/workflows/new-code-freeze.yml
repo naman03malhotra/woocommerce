@@ -50,7 +50,7 @@ jobs:
                       let runCodeFreeze = true;
                       const event = context.payload;
 
-                      if (event.inputs.skip_verify !== 'false') {
+                      if (event.inputs && event.inputs.skip_verify !== 'false') {
                         core.setOutput('runCodeFreeze', runCodeFreeze);
                         console.log('Skipping verification step');
                         return;
