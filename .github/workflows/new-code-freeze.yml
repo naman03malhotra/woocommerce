@@ -41,7 +41,7 @@ jobs:
                       }
 
             - name: Verify if any PR is left open by author:app/github-actions
-              if: ${{ needs.verify-release.outputs.run == 'true' }}
+              if: ${{ steps.verify.outputs.run == 'true' }}
               id: verify-prs
               uses: actions/github-script@v6
               with:
