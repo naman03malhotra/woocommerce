@@ -206,7 +206,22 @@ export const updateTrunkChangelog = async (
 			'-b': null,
 			[ branch ]: null,
 		} );
-		await git.raw( [ 'cherry-pick', '--allow-empty', deletionCommitHash ] );
+
+		try {
+			await git.raw( [ 'cherry-pick', deletionCommitHash ] );
+		} catch ( e ) {
+			if (
+				e.message.includes( 'nothing to commit, working tree clean' )
+			) {
+				Logger.notice(
+					'Cherry-pick resulted in no changes, continuing without error.'
+				);
+				// No need to skip, just continue
+			} else {
+				throw e; // Re-throw if it's a different error
+			}
+		}
+
 		await git.push( 'origin', branch, [ '--force' ] );
 		Logger.notice( `Creating PR for ${ branch }` );
 		const pullRequest = await createPullRequest( {
