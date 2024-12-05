@@ -204,7 +204,7 @@ jobs:
             - name: Push the new branch to the remote repository
               env:
                 RELEASE_BRANCH: ${{ needs.prep-for-code-freeze.outputs.nextReleaseBranch }}
-              run: git push origin $RELEASE_BRANCH -f
+              run: git push origin $RELEASE_BRANCH
 
             - name: Create next monthly milestone
               id: milestone
