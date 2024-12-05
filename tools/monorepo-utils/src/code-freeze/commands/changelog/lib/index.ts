@@ -236,6 +236,12 @@ export const updateTrunkChangelog = async (
 		} );
 		Logger.notice( `Pull request created: ${ pullRequest.html_url }` );
 	} catch ( e ) {
-		Logger.error( e );
+		if ( e.message.includes( 'No commits between trunk' ) ) {
+			Logger.notice(
+				'No commits between trunk and the branch, skipping the PR.'
+			);
+		} else {
+			Logger.error( e );
+		}
 	}
 };
