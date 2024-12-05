@@ -23,8 +23,7 @@ jobs:
         name: 'Verify if the release is a major version release, that ends with .0'
         runs-on: ubuntu-20.04
         outputs:
-            run: ${{ steps.verify.outputs.run }}
-            runCodeFreeze: ${{ steps.verify.outputs.runCodeFreeze }}
+            runCodeFreeze: ${{ steps.verify-prs.outputs.runCodeFreeze }}
         steps:
             - name: Verify release
               id: verify
@@ -35,13 +34,13 @@ jobs:
                       const release = event.release;
 
                       if (release.tag_name.endsWith('.0')) {
-                          core.setOutput('run', 'true');
+                          core.setOutput('runVerify', 'true');
                       } else {
-                          core.setOutput('run', 'false');
+                          core.setOutput('runVerify', 'false');
                       }
 
             - name: Verify if any PR is left open by author:app/github-actions
-              if: ${{ steps.verify.outputs.run == 'true' }}
+              if: ${{ steps.verify.outputs.runVerify == 'true' }}
               id: verify-prs
               uses: actions/github-script@v6
               with:
