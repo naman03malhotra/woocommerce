@@ -1,10 +1,10 @@
 === WooCommerce ===
 Contributors: automattic, woocommerce, mikejolley, jameskoster, claudiosanches, rodrigosprimo, peterfabian1000, vedjain, jamosova, obliviousharmony, konamiman, sadowski, wpmuguru, royho, barryhughes-1, claudiulodro, tiagonoronha, ryelle, levinmedia, aljullu, nerrad, joshuawold, assassinateur, haszari, mppfeiffer, nielslange, opr18, ralucastn, tjcafferkey, danielwrobert, patriciahillebrandt, albarin, dinhtungdu, imanish003, karolmanijak, sunyatasattva, alexandrelara, gigitux, danieldudzic, samueljseay, alexflorisca, opr18, tarunvijwani, pauloarromba, saadtarhi, bor0, kloon, coreymckrill, jorgeatorres, leifsinger
 Tags: online store, ecommerce, shop, shopping cart, sell online
-Requires at least: 6.5
+Requires at least: 6.6
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 9.4.1
+Stable tag: 9.4.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -173,6 +173,16 @@ WooCommerce comes with some sample data you can use to see how products look; im
 
 **WooCommerce**
 
+* Fix - Fix "missing 'price' property in 'offers'" error in Google Search Console [#52871](https://github.com/woocommerce/woocommerce/pull/52871)
+* Fix - Fix horizontal scrolling on Analytics pages. [#52971](https://github.com/woocommerce/woocommerce/pull/52971)
+* Fix - Fix mobile styles for delayed account creation. [#52736](https://github.com/woocommerce/woocommerce/pull/52736)
+* Fix - Fix PHP and Core API tests [#52850](https://github.com/woocommerce/woocommerce/pull/52850)
+* Fix - Fix the Payments main menu item linking to a blank page when onboarding tasks are hidden. [#52900](https://github.com/woocommerce/woocommerce/pull/52900)
+* Fix - Fix the registration of routes in controllers inheriting from RestApiControllerBase [#52817](https://github.com/woocommerce/woocommerce/pull/52817)
+* Fix - Fix `woocommerce_reports_charts` filter [#53126](https://github.com/woocommerce/woocommerce/pull/53126)
+* Fix - Product Elements: fix the issue that some product elements like price or rating were not available in Patterns [#53077](https://github.com/woocommerce/woocommerce/pull/53077)
+* Fix - StyleAttributesUtils: escape className attribute [#53026](https://github.com/woocommerce/woocommerce/pull/53026)
+* Fix - Prevented a i10n-related warning when using WordPress 6.7 with Brands [#52912](https://github.com/woocommerce/woocommerce/pull/52912)
 * Fix - Added strict check for PR and release number extracted from Issue body [#52002](https://github.com/woocommerce/woocommerce/pull/52002)
 * Fix - Add focus indicator to image on product card [#52011](https://github.com/woocommerce/woocommerce/pull/52011)
 * Fix - Add focus indicator to select and text inputs on Cart/Checkout block pages [#52010](https://github.com/woocommerce/woocommerce/pull/52010)
@@ -259,7 +269,6 @@ WooCommerce comes with some sample data you can use to see how products look; im
 * Fix - Make coupon code errors announced by screen readers [#52040](https://github.com/woocommerce/woocommerce/pull/52040)
 * Fix - Make sure session exists before calling its functions in the Cart StoreApi route [#52410](https://github.com/woocommerce/woocommerce/pull/52410)
 * Fix - Modify Product Collection block image alt #52593 [#52593](https://github.com/woocommerce/woocommerce/pull/52593)
-* Fix - Modify product import file check to use the WP filesystem API [#51540](https://github.com/woocommerce/woocommerce/pull/51540)
 * Fix - Patterns: Remove broken Product Hero 2 Column 2 Row pattern [#52624](https://github.com/woocommerce/woocommerce/pull/52624)
 * Fix - Preserve dash when saving Mongolia postcode. [#51674](https://github.com/woocommerce/woocommerce/pull/51674)
 * Fix - Prevent Business Services products from showing pricing information when they're displayed as regular product cards on the Extensions page. [#52118](https://github.com/woocommerce/woocommerce/pull/52118)
@@ -283,6 +292,9 @@ WooCommerce comes with some sample data you can use to see how products look; im
 * Fix - Set a fixed color to Select2 dropdown options [#52244](https://github.com/woocommerce/woocommerce/pull/52244)
 * Fix - Set server-side render of Mini-Cart icon to correctly show/hide the count based on block setting [#52124](https://github.com/woocommerce/woocommerce/pull/52124)
 * Fix - Store API will ensure the cart response has valid quantities for items if setting limits via filters [#52154](https://github.com/woocommerce/woocommerce/pull/52154)
+* Fix - Correctly respect the generate password option for accounts created post Checkout. [#53277](https://github.com/woocommerce/woocommerce/pull/53277)
+* Fix - Add new required props to RouterProvider [#53433](https://github.com/woocommerce/woocommerce/pull/53433)
+* Fix - Fix search in Installed Plugins page [#53438](https://github.com/woocommerce/woocommerce/pull/53438)
 * Add - Adapt receipt to take into account failed orders. [#51853](https://github.com/woocommerce/woocommerce/pull/51853)
 * Add - Add a11y to the color swatches [#51715](https://github.com/woocommerce/woocommerce/pull/51715)
 * Add - Add a method to the order object to get info about the card used for payment [#52173](https://github.com/woocommerce/woocommerce/pull/52173)
@@ -329,6 +341,7 @@ WooCommerce comes with some sample data you can use to see how products look; im
 * Add - Record Cancel and Close events on modal to change collection type #52314 [#52314](https://github.com/woocommerce/woocommerce/pull/52314)
 * Add - Send a customer notification email when an order is marked as "failed". [#51778](https://github.com/woocommerce/woocommerce/pull/51778)
 * Add - Track first and last 20 orders to Weekly Tracker Snapshot [#52074](https://github.com/woocommerce/woocommerce/pull/52074)
+* Update - Disable e2e and API test run against external envs as a part of `release-checks`. [#52778](https://github.com/woocommerce/woocommerce/pull/52778)
 * Update - Added a new update function for WC 9.5 to add the wc_feature_woocommerce_brands_enabled option. [#52051](https://github.com/woocommerce/woocommerce/pull/52051)
 * Update - Add loading placeholder and payment method toggle to block checkout [#52044](https://github.com/woocommerce/woocommerce/pull/52044)
 * Update - Add parameter to woocommerce_locate_template filter [#52169](https://github.com/woocommerce/woocommerce/pull/52169)
@@ -361,6 +374,7 @@ WooCommerce comes with some sample data you can use to see how products look; im
 * Update - Update the Catalog searching, average rating, and product button blocks to make sure they render with the wp-block-<block-name> class. [#51617](https://github.com/woocommerce/woocommerce/pull/51617)
 * Update - Use Block Hooks to insert Account Creation block into templates automatically. [#51582](https://github.com/woocommerce/woocommerce/pull/51582)
 * Update - [ Experimental ] Moved experimental product dataviews menu to Product top menu. [#51511](https://github.com/woocommerce/woocommerce/pull/51511)
+* Dev - Checkout: Revert #52044 Add loading placeholder and payment method toggle. [#53085](https://github.com/woocommerce/woocommerce/pull/53085)
 * Dev - Add a site reset plugin for e2e testing with externally hosted sites [#51720](https://github.com/woocommerce/woocommerce/pull/51720)
 * Dev - Add new ci jobs for e2e tests with pre-release WP version [#51814](https://github.com/woocommerce/woocommerce/pull/51814)
 * Dev - Adds constants for all legacy order statuses to centralize them, reduce typos, improve code strictness, ease status lookups, and enhance documentation. [#52427](https://github.com/woocommerce/woocommerce/pull/52427)
@@ -409,6 +423,7 @@ WooCommerce comes with some sample data you can use to see how products look; im
 * Dev - Update the `.distignore` file to exclude the ./client/admin folder from zip [#52052](https://github.com/woocommerce/woocommerce/pull/52052)
 * Dev - Uses the newly introduced order status constants in unit tests. [#51920](https://github.com/woocommerce/woocommerce/pull/51920)
 * Dev - [e2e tests] Remove update-woocommerce spec [#52493](https://github.com/woocommerce/woocommerce/pull/52493)
+* Dev - Update affected tests to be compatible with both Gutenberg stable and nightly. [#53293](https://github.com/woocommerce/woocommerce/pull/53293)
 * Tweak - Add autoloading for woocommerce_allow_tracking option [#52512](https://github.com/woocommerce/woocommerce/pull/52512)
 * Tweak - Adjust copy in the cart sidebar when the shipping calculator is not enabled. [#51760](https://github.com/woocommerce/woocommerce/pull/51760)
 * Tweak - Adjust styles for inputs and selects in cart and checkout to use ems to better support Twenty Twenty-Five theme. [#51725](https://github.com/woocommerce/woocommerce/pull/51725)
@@ -449,6 +464,7 @@ WooCommerce comes with some sample data you can use to see how products look; im
 * Performance - Limit loading product block editor to admin pages and rest requests [#51954](https://github.com/woocommerce/woocommerce/pull/51954)
 * Performance - Optimize Coming Soon badge performance with early exits [#52477](https://github.com/woocommerce/woocommerce/pull/52477)
 * Performance - Optimize `test_import_sample_products` unit test performance [#52523](https://github.com/woocommerce/woocommerce/pull/52523)
+* Enhancement - Update dompurify to 2.5.7 [#52961](https://github.com/woocommerce/woocommerce/pull/52961)
 * Enhancement - Add additional body class for the account dashboard [#51147](https://github.com/woocommerce/woocommerce/pull/51147)
 * Enhancement - Add a setting to the Mini-Cart block to navigate to checkout on click instead of opening the drawer. [#51283](https://github.com/woocommerce/woocommerce/pull/51283)
 * Enhancement - Add support for `email` query parameter in `OrderActionsRestController`. [#52454](https://github.com/woocommerce/woocommerce/pull/52454)
@@ -460,6 +476,5 @@ WooCommerce comes with some sample data you can use to see how products look; im
 * Enhancement - Removed CouponPageMoved class. [#52475](https://github.com/woocommerce/woocommerce/pull/52475)
 * Enhancement - Use product name as fallback alt text in product gallery [#51936](https://github.com/woocommerce/woocommerce/pull/51936)
 * Enhancement - [Experimental] Allow disabling product descriptions in the product summary. [#52503](https://github.com/woocommerce/woocommerce/pull/52503)
-
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce/trunk/changelog.txt).
