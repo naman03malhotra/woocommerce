@@ -206,7 +206,7 @@ export const updateTrunkChangelog = async (
 			'-b': null,
 			[ branch ]: null,
 		} );
-		await git.raw( [ 'cherry-pick', deletionCommitHash ] );
+		await git.raw( [ 'cherry-pick', '--allow-empty', deletionCommitHash ] );
 		await git.push( 'origin', branch, [ '--force' ] );
 		Logger.notice( `Creating PR for ${ branch }` );
 		const pullRequest = await createPullRequest( {
