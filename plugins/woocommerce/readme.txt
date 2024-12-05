@@ -169,12 +169,14 @@ WooCommerce comes with some sample data you can use to see how products look; im
 
 == Changelog ==
 
-= 9.4.3 2024-12-03 =
+= 9.4.0 2024-12-24 =
 
 **WooCommerce**
 
-* Fix - Validate and sanitize the event origin and event data when listening to message events from attachParentListeners function to prevent xss attacks during the customize your store flow
-* Fix - Added new validation to Store API checkout endpoint regarding Accounts & Privacy definitions.
-* Fix - Updated wc_get_cart_url() to only return permalinks rather than building the current URL manually.
+* Fix - Added new validation to Store API checkout endpoint regarding Accounts & Privacy definitions. [#53407](https://github.com/woocommerce/woocommerce/pull/53407)
+* Fix - Updated wc_get_cart_url() to only return permalinks rather than building the current URL manually. [#53409](https://github.com/woocommerce/woocommerce/pull/53409)
+* Fix - Validate and sanitize the event origin and event data when listening to message events from attachParentListeners function to prevent xss attacks during the customize your store flow [#53405](https://github.com/woocommerce/woocommerce/pull/53405)
+* Dev - Update affected tests to be compatible with both Gutenberg stable and nightly. [#53100](https://github.com/woocommerce/woocommerce/pull/53100)
+
 
 [See changelog for all versions](https://raw.githubusercontent.com/woocommerce/woocommerce/trunk/changelog.txt).
