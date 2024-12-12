@@ -50,23 +50,27 @@ const updateReleaseChangelogs = async (
 
 	let readme = await readFile( readmeFile, 'utf-8' );
 	let nextLog = await readFile( nextLogFile, 'utf-8' );
+	console.log( 'readme', readme );
+	console.log( 'nextLog', nextLog );
 
 	nextLog = nextLog.replace(
 		/= (\d+\.\d+\.\d+) YYYY-mm-dd =/,
 		`= $1 ${ releaseDate } =`
 	);
+	console.log( 'nextLog', nextLog );
 
 	// Convert PR number to markdown link.
 	nextLog = nextLog.replace(
 		/\[#(\d+)\](?!\()/g,
 		'[#$1](https://github.com/woocommerce/woocommerce/pull/$1)'
 	);
+	console.log( 'nextLog', nextLog );
 
 	readme = readme.replace(
 		/== Changelog ==\n(.*?)\[See changelog for all versions\]/s,
 		`== Changelog ==\n\n${ nextLog }\n\n[See changelog for all versions]`
 	);
-
+	console.log( 'readme', readme );
 	await writeFile( readmeFile, readme );
 };
 
