@@ -243,6 +243,7 @@ jobs:
                 PR_NUMBER: ${{ needs.prep.outputs.pr }}
                 OWNER: ${{ github.repository_owner }}
                 REPO: ${{ github.repository }}
+                GH_TOKEN: ${{ github.token }}
 
             - name: Comment on PR about the failed cherry pick
               if: ${{ failure() }}
